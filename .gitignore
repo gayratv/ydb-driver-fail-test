@@ -1,0 +1,12 @@
+/node_modules/
+/build/
+/lib/
+/dist/
+.idea/*
+
+*.log
+
+package-lock.json
+# ключ YDB
+/service_account_key_file.json
+/src/logtest.drivererr.txt

@@ -1,0 +1,10 @@
+{"level":30,"time":"2022-08-03T10:31:06.591Z","msg":"hello world"}
+{"level":30,"time":"2022-08-03T10:31:06.591Z","a":"property","msg":"hello child!"}
+{"level":30,"time":"2022-08-03T10:41:59.829Z","msg":"hello world"}
+{"level":30,"time":"2022-08-03T10:41:59.830Z","a":"property","msg":"hello child!"}
+{"level":30,"time":"2022-08-03T10:42:48.523Z","msg":"\n\n--------------------------\nhello world"}
+{"level":30,"time":"2022-08-03T10:42:48.524Z","a":"property","msg":"hello child!"}
+{"level":30,"time":"2022-08-03T10:43:32.045Z","msg":""}
+{"level":30,"time":"2022-08-03T10:43:32.046Z","msg":"--------- START -----------------"}
+{"level":30,"time":"2022-08-03T10:43:32.046Z","msg":"hello world"}
+{"level":30,"time":"2022-08-03T10:43:32.046Z","a":"property","msg":"hello child!"}
