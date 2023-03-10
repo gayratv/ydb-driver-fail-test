@@ -39,3 +39,31 @@ metadata: Metadata { internalRepr: Map(0) {}, options: {} }
 В данном примере проблема решается путем перехвата необработанной ошибки через process.on.  Данное решение плохо тем, что невозможно в точности утверждать что ошибка вызвана именно драйвером YDB.
 
 Также в документации Node говорится что такая обработка ошибки используется только для освобождения ресурсов и сброса данных из кеша.
+
+### Необходимо получить файл service_account_key_file.json
+
+Как получить написано тут:
+
+https://cloud.yandex.ru/docs/ydb/tutorials/connect-from-cf-nodejs
+
+Получите OAuth-токен в сервисе Яндекс.OAuth.
+
+https://cloud.yandex.ru/docs/cli/quickstart
+
+yc iam key create --service-account-name sa-function -o service_account_key_file.json
+
+yc iam key create --service-account-name battery  -o service_account_key_file.json
+
+### для запуска используем tmux
+
+detach from session
+Ctrl + b d
+
+tmux new -s n1
+tmux a -t n1
+
+cd /var/node/srv1
+ts-node src/net-socket/server-socket.test.ts
+
+ts-node src/net-socket/client-socket-message.test.ts
+

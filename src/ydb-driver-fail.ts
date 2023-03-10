@@ -3,32 +3,15 @@
 
 import dotenv from 'dotenv';
 dotenv.config();
-import pino, { Bindings } from 'pino';
-import path from 'path';
 
 import express from 'express';
 import { Driver, getSACredentialsFromJson, IamAuthService } from 'ydb-sdk';
+import { queryRun } from './query';
 
 let driver: Driver;
 
-const pinoDest = pino.destination(
-  path.join(__dirname, '/logtest.drivererr.txt')
-);
-
-const logger = pino(
-  {
-    timestamp: pino.stdTimeFunctions.isoTime,
-    //   type Level = "fatal" | "error" | "warn" | "info" | "debug" | "trace" | silent;
-    level: 'info',
-    enabled: true,
-    formatters: { bindings: (_: Bindings) => ({}) },
-  },
-  pinoDest
-);
-console.log(path.join(__dirname, '/logtest.drivererr.txt'));
-
 async function initDbLocal() {
-  logger.info('Driver initializing...');
+  console.log('Driver initializing...');
   const saKeyFile = process.env.SA_KEY_FILE;
   const saCredentials = getSACredentialsFromJson('./' + saKeyFile);
   const authService = new IamAuthService(saCredentials);
@@ -39,37 +22,35 @@ async function initDbLocal() {
   });
   const timeout = 10000;
   if (!(await driver.ready(timeout))) {
-    logger.fatal(`Driver has not become ready in ${timeout}ms!`);
+    console.error(`Driver has not become ready in ${timeout}ms!`);
     process.exit(1);
   }
-  logger.info('driver initialization Done');
-  pinoDest.flushSync();
+  console.log('driver initialization Done');
 }
 
 const app = express();
-const port = 3020;
+const port = process.env.PORT;
 
 process.on('uncaughtException', async (err) => {
-  logger.info('Ошибка на верхнем уровне process.on');
+  console.log('Ошибка на верхнем уровне process.on');
   const err1: any = err;
 
-  logger.info(`err1.code  ${err1.code}`);
-  logger.info(err1.details, 'err1.details ');
-  logger.info('');
-  logger.info('Полная распечатка ошибки');
-  logger.info(err);
-  pinoDest.flushSync();
+  console.log(`err1.code  ${err1.code}`);
+  console.log(err1.details, 'err1.details ');
+  console.log('');
+  console.log('Полная распечатка ошибки');
+  console.log(err);
 
   if (err1.code === 14 && err1.details === 'Stream refused by server') {
     // проблема с YDB
-    logger.info('>>>>>>> Error YDB problem');
-    await driver.destroy();
-    logger.info('call initDbLocal');
+    console.log('>>>>>>> Error YDB problem');
+    /* await driver.destroy();
+    console.log('call initDbLocal');
     await initDbLocal();
-    return;
+    return;*/
   }
 
-  // process.exit(1); //mandatory (as per the Node docs)
+  process.exit(1); //mandatory (as per the Node docs)
 });
 
 (async () => {
@@ -77,20 +58,22 @@ process.on('uncaughtException', async (err) => {
   // initDbLocalFail();
 })();
 
-logger.info('== Start ===  ');
+console.log('== Start ===  ');
 
 app.get('/', (_req, res) => {
   res.send(`Hello World! test app\n`);
 });
 
-app.get('/apptest', (_req, res) => {
-  logger.info('/apptest');
-  res.send('Hello World 2! /apptest');
+app.get('/apptest', async (_req, res) => {
+  console.log('/apptest');
+  const data = await queryRun(driver);
+  console.log(data);
+  console.log('length : ', JSON.stringify(data).length);
+  res.json(data);
 });
 
 app.listen(port, () => {
-  logger.info(`Example app listening on port ${port}`);
-  pinoDest.flushSync();
+  console.log(`Example app listening on port ${port}`);
   console.log(`Example app listening on port ${port}`);
 });
 

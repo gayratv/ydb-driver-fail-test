@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Current Typescript" type="NodeJSConfigurationType" singleton="false" application-parameters="$FilePathRelativeToProjectRoot$" path-to-node="C:/Program Files/nodejs/node" node-parameters="-r ts-node/register" working-dir="$PROJECT_DIR$">
+    <method v="2" />
+  </configuration>
+</component>
